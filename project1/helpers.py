@@ -3,9 +3,8 @@
 import numpy as np
 
 
-def load_data(sub_sample=True, add_outlier=False):
+def load_data(path_datset, sub_sample=True, add_outlier=False):
     """Load data and convert it to the metrics system."""
-    path_dataset = "height_weight_genders.csv"
     data = np.genfromtxt(
         path_dataset, delimiter=",", skip_header=1, usecols=[1, 2])
     height = data[:, 0]
@@ -22,10 +21,6 @@ def load_data(sub_sample=True, add_outlier=False):
         height = height[::50]
         weight = weight[::50]
 
-    if add_outlier:
-        # outlier experiment
-        height = np.concatenate([height, [1.1, 1.2]])
-        weight = np.concatenate([weight, [51.5/0.454, 55.3/0.454]])
 
     return height, weight, gender
 
