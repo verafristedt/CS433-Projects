@@ -5,3 +5,4 @@ project1/data/train.csv
 
 .DS_Store
 .ipynb_checkpoints
+*.pyc
