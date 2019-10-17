@@ -1,5 +1,6 @@
 
 import numpy as np
+from costs import compute_mse
 
 def build_k_indices(y, k_fold, seed):
     """
@@ -22,13 +23,13 @@ def build_k_indices(y, k_fold, seed):
                  for k in range(k_fold)]
     return np.array(k_indices)
 
-def cross_validation(y, tx, k_indicies, k, kind='gd' lambda_=0, degree=0):
+def cross_validation(y, tx, k_indicies, k, kind='gd' lambda_=0, degree=1):
     """
     General function that does cross validation for each of the methods.
     
     params:
     kind:
-        gd - Gradiend Decent
+        gd - Gradient Decent
         sgd - Stochastic Gradient Decent
         ls - Least Squares
         ridge - Rigde Regression
@@ -54,7 +55,26 @@ def cross_validation(y, tx, k_indicies, k, kind='gd' lambda_=0, degree=0):
     tx_te = build_poly(x_te, degree)
     
     
+    if kind == 'gd':
+        _, w = least_squares_GD(y, tx,initial_w, max_iters, gamma)
+    else if kind == 'sgd':
+        _, w = least_squares_SGD(y, tx,initial_w, max_iters, gamma)
+    else if kind == 'ls':
+        _, w = least_squares(y, tx)
+    else if kind == 'ridge':
+        _, w = ridge_regression(y, tx, lambda_)
+    else if kind == 'log':
+        _, w = logistic_regression(y, tx, inital_w, max_iters, gamma)
+    else if kind == 'reg_log':
+        _, w = re_logistic_regression(y, tx, lambda_, inital_w, max_iters, gamma)
+    else:
+        raise "Not valid value for 'kind'"
+        
+    loss_tr = compute_mse(y_tr, tx_tr, w)
+    loss_te = compute_mse(y_te, tx_te, w)
     
-    
+    return loss_tr, loss_te
+
+
     
     
