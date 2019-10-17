@@ -11,7 +11,7 @@ def standardize(x):
     returns:
         x - standardized
     """
-    return (x - np.mean(x)) / (np.std(x))
+    return (x - np.nanmean(x, axis = 0)) / (np.nanstd(x, axis = 0))
     
     
 def build_tx(x):
