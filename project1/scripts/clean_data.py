@@ -37,13 +37,12 @@ def set_undefined_to_mean(x):
 
 def remove_outliers(x):
     """
-    Set all outliers that are more than 2 std from the mean to nan.
+    Set all outliers that are more than 2 std from the mean to the mean.
     """
     x_std = np.nanstd(x, axis = 0)
     x_mean = np.nanmean(x, axis = 0)
-    
-    x[x > x_mean + 2*x_std] = np.nan
-    x[x < x_mean - 2*x_std] = np.nan
+    indicies = np.where((x > (x_mean + 2*x_std)) | (x < x_mean +2*x_std) )
+    x[indicies] = np.take(x_mean, indicies[1])
     
     return x
 
