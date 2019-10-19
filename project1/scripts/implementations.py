@@ -1,42 +1,36 @@
 
 import numpy as np
+from proj1_helpers import *
 
-def compute_mse(y, tx, w):
-    """compute the loss by mse."""
-    e = y - tx.dot(w)
-    mse = e.dot(e) / (2 * len(e))
-    return mse
 
 def least_squares(y, tx):
     """Calculates the least squares solution."""
     
-    weights = np.linalg.solve(np.dot(tx.T, tx), np.dot(tx.T, y))
-    loss = compute_mse(y, tx, weights)
+    w = np.linalg.solve(np.dot(tx.T, tx), np.dot(tx.T, y))
+    loss = compute_mse(y, tx, w)
     
-    return loss, weights
+    return w, loss
 
-def standardize(x):
-    """
-    Returns the standardized version of x
-    params:
-        x - Raw Data
+
+
+def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+    """Gradient descent algorithm."""
+    
+    w = initial_w
+    for n_iter in range(max_iters):
         
-    returns:
-        x - standardized
-    """
-    return (x - np.nanmean(x, axis = 0)) / (np.nanstd(x, axis = 0))
+        gradient = compute_gradient(y, tx, w)
+        w =  w - gamma*gradient
+        
     
-    
-def build_tx(x):
-    """
-    Adds zero row for constants in front of x
-    
-    params: 
-        x - standardized data
-    returns:
-        tx - augumented x matrix
-    """
-    
-    return np.c_[np.zeros(len(x)), x]
+    loss = compute_mse(y,tx,w)  
+    return w, loss
 
 
+def run_gradient_decent(y, tx):
+    
+    max_iters = 500
+    gamma = 0.000001
+    
+    initial_w = np.array([0.0005 for i in range(tx.shape[1])])
+    return least_squares_GD(y, tx, initial_w, max_iters, gamma)
