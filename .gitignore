@@ -1,9 +1,10 @@
 
-project1/data/sample-submission.csv
-project1/data/test.csv
-project1/data/train.csv
 
+# Filestypes 
 **/.DS_Store
 **/.ipynb_checkpoints
-**/.pyc
+**/.pyc 
+
+# Folders
+**/data
 **/__pycache__
