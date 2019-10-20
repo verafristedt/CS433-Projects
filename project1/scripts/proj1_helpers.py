@@ -90,3 +90,16 @@ def compute_gradient(y, tx, w):
     return -(1/len(y))*((tx.T).dot(e))
 
     
+    
+def build_poly(x, degree):
+    """
+    Augmentes x to add extra features, with x, x^2 ... x^degree
+    
+    """
+    feature_matrix = np.ones([len(x), 1])
+
+    # Degree is defined as highest power, so have to add one in range
+    for degree in range(1, degree + 1):
+        feature_matrix = np.c_[feature_matrix, np.power(x, degree)]
+            
+    return feature_matrix
