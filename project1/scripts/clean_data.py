@@ -48,6 +48,22 @@ def remove_outliers(x):
 
 
 
+def split_by_jets(y, x, jets_index):
+    
+    jet0 = x[x[:,jets_index] == 0]
+    jet1 = x[x[:,jets_index] == 1]
+    jet23 = x[(x[:,jets_index] == 2) | ((x[:,jets_index] == 3) )]
+    jet0 = np.delete(jet0, jets_index, axis = 1)
+    jet1 = np.delete(jet1, jets_index, axis = 1)
+    jet23 = np.delete(jet23, jets_index, axis = 1)
+    
+    y0 = y[np.argwhere(x[:,jets_index] == 0)]
+    y1 = y[np.argwhere(x[:,jets_index] == 1)]
+    y23 = y[np.argwhere((x[:,jets_index] == 2) | (x[:,jets_index] == 3) )]
+
+    return jet0, jet1, jet23, y0, y1, y23
+    
+
 
 def clean_data(x):
     """
@@ -55,4 +71,6 @@ def clean_data(x):
     """
     x = remove_undefined_columns(x)
     x = set_undefined_to_mean(x)
+    
     return x
+

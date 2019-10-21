@@ -96,10 +96,31 @@ def build_poly(x, degree):
     Augmentes x to add extra features, with x, x^2 ... x^degree
     
     """
-    feature_matrix = np.ones([len(x), 1])
+    feature_matrix = np.ones((len(x), 1))
 
     # Degree is defined as highest power, so have to add one in range
     for degree in range(1, degree + 1):
         feature_matrix = np.c_[feature_matrix, np.power(x, degree)]
-
+            
     return feature_matrix
+
+
+def split_data(y, x, ratio, seed=1):
+    """
+    split the dataset based on the split ratio. If ratio is 0.8 
+    you will have 80% of your data set dedicated to training 
+    and the rest dedicated to testing
+    """
+    # set seed
+    np.random.seed(seed)
+    num_rows = len(y)
+    indicies = np.random.permutation(num_rows)
+    split = int(np.floor(num_rows*ratio))
+    ind_tr = indicies[: split]
+    ind_te = indicies[split :]
+    y_tr = y[ind_tr]
+    y_te = y[ind_te]
+    x_tr = x[ind_tr]
+    x_te = x[ind_te]
+    return y_tr, x_tr, y_te, x_te
+

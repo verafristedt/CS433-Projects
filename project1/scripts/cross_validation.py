@@ -80,6 +80,15 @@ def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1):
     return loss_tr, loss_te
 
 
+def ridge_regression(y, tx, lambda_):
+    """implement ridge regression."""
+    aI = 2 * tx.shape[0] * lambda_ * np.identity(tx.shape[1])
+    a = tx.T.dot(tx) + aI
+    b = tx.T.dot(y)
+    w_ridge = np.linalg.solve(a, b)
+    loss_ridge = (1/len(y))*np.transpose(y - tx@w_ridge).dot((y - tx@w_ridge))
+    return loss_ridge, w_ridge
+
 
 def plot_losses(losses):
     
@@ -95,11 +104,40 @@ def cross_validation_least_squares(y, tx):
         Function for testing which degree we should use in our polynomial basis
         
     """
-    seed = 100
-    k_fold = 5    #Only use 10 if using full dataset (250000 rows) else k_fold = 3
+    seed = 10
+    k_fold = 3    #Only use 10 if using full dataset (250000 rows) else k_fold = 3
     k_indices = build_k_indices(y, k_fold, seed)
     
-    degrees = np.arange(1,5)
+    degrees = np.arange(20)
+    
+    losses_tr = []
+    losses_te = []
+    
+    for degree in degrees:
+        temp_tr = []
+        temp_te = []
+        for k in range(k_fold):
+            loss_tr, loss_te = cross_validation(y, tx, k_indices, k, kind='ls', degree = degree)
+            
+            temp_tr.append(np.sqrt(2*loss_tr))
+            temp_te.append(np.sqrt(2*loss_te))
+        
+        losses_tr.append(np.mean(temp_tr))
+        losses_te.append(np.mean(temp_te))
+    
+    return pd.DataFrame(data = {'degree': degrees, 'losses_tr': losses_tr, 'losses_te': losses_te})
+    
+
+def cross_validation_ridge(y, tx):
+    """
+        Function for testing which degree we should use in our polynomial basis
+        
+    """
+    seed = 10
+    k_fold = 10    
+    k_indices = build_k_indices(y, k_fold, seed)
+    
+    degrees = np.arange(4)
     
     losses_tr = []
     losses_te = []
