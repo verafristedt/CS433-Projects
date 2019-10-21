@@ -105,10 +105,10 @@ def cross_validation_least_squares(y, tx):
         
     """
     seed = 10
-    k_fold = 3    #Only use 10 if using full dataset (250000 rows) else k_fold = 3
+    k_fold = 5  
     k_indices = build_k_indices(y, k_fold, seed)
     
-    degrees = np.arange(20)
+    degrees = np.arange(1,12,3)
     
     losses_tr = []
     losses_te = []
