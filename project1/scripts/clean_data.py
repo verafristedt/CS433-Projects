@@ -68,7 +68,7 @@ def remove_outliers(x):
 
 def apply_cosine_base(x):
     """
-    Applies cosine base on all features which are angles
+    Applies cosine base on all features that are angles
     """
     ang_col = [11,15,18, 20, 25, 28]
     x[:,ang_col] = np.cos(x[:,ang_col])
@@ -96,6 +96,9 @@ def split_by_jets(y, x, jets_index=22):
     return jet0, jet1, jet23, y0, y1, y23
     
 
+    
+def remove_features(x, indicies):
+    return np.delete(x, indicies, axis = 1)
 
 def clean_data(x):
     """
@@ -104,7 +107,8 @@ def clean_data(x):
     x = set_undefined_to_median(x)
     x = apply_log(x)
     x = apply_cosine_base(x)
-    x = standardize(x)
+    #x = standardize(x)
+    x = remove_features(x,[14, 15, 17, 18, 20])
     
     return x
 

@@ -1,6 +1,6 @@
 
 import numpy as np
-from proj1_helpers import *
+from scripts.proj1_helpers import *
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """

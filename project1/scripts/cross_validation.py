@@ -1,8 +1,8 @@
 
 import numpy as np
 import pandas as pd
-from proj1_helpers import *
-from implementations import *
+from scripts.proj1_helpers import *
+from scripts.implementations import *
 
 def build_k_indices(y, k_fold, seed):
     """
@@ -105,10 +105,10 @@ def cross_validation_least_squares(y, tx):
         
     """
     seed = 10
-    k_fold = 5  
+    k_fold = 5
     k_indices = build_k_indices(y, k_fold, seed)
     
-    degrees = np.arange(1,12,3)
+    degrees = np.arange(1,15)
     
     losses_tr = []
     losses_te = []
