@@ -56,11 +56,11 @@ def apply_log(x):
     
 def remove_outliers(x):
     """
-    Set all outliers that are more than 2 std from the mean to the mean.
+    Set all outliers that are more than 2 std from the mean, to the mean.
     """
     x_std = np.nanstd(x, axis = 0)
     x_mean = np.nanmean(x, axis = 0)
-    indicies = np.where((x > (x_mean + 4*x_std)) | (x < x_mean + 4*x_std) )
+    indicies = np.where((x > (x_mean + 4*x_std)) | (x < x_mean - 4*x_std) )
     x[indicies] = np.take(x_mean, indicies[1])
     
     return x
@@ -114,4 +114,5 @@ def clean_data(x):
     x = remove_features(x,[14, 15, 17, 18, 20])
     
     return x
+
 

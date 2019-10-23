@@ -87,5 +87,5 @@ def plot_hist(x):
     ax = ax.ravel()
     for i in range(x.shape[1]):
 
-        ax[i].hist(x[:,i], bins = 30)
+        ax[i].hist(x[:,i], bins = 100)
         ax[i].set_title(i)
