@@ -51,7 +51,7 @@ def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1):
     # Training Data
     y_tr = y[indices_tr]
     tx_tr = tx[indices_tr]
-    tx_tr = build_poly(tx_tr,degree)
+    tx_tr = build_poly(tx_tr, degree)
     
     # Test data
     y_te = y[indices_te]
@@ -78,16 +78,6 @@ def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1):
     loss_te = compute_mse(y_te, tx_te, w)
     
     return loss_tr, loss_te
-
-
-def ridge_regression(y, tx, lambda_):
-    """implement ridge regression."""
-    aI = 2 * tx.shape[0] * lambda_ * np.identity(tx.shape[1])
-    a = tx.T.dot(tx) + aI
-    b = tx.T.dot(y)
-    w_ridge = np.linalg.solve(a, b)
-    loss_ridge = (1/len(y))*np.transpose(y - tx@w_ridge).dot((y - tx@w_ridge))
-    return loss_ridge, w_ridge
 
 
 def plot_losses(losses):
@@ -128,25 +118,26 @@ def cross_validation_least_squares(y, tx):
     return pd.DataFrame(data = {'degree': degrees, 'losses_tr': losses_tr, 'losses_te': losses_te})
     
 
-def cross_validation_ridge(y, tx):
+def cross_validation_ridge(y, tx, degree):
     """
         Function for testing which degree we should use in our polynomial basis
         
     """
-    seed = 10
-    k_fold = 10    
+    seed = 100
+    k_fold = 5    
     k_indices = build_k_indices(y, k_fold, seed)
     
-    degrees = np.arange(4)
+    lambdas = np.logspace(-4,2,10)
     
     losses_tr = []
     losses_te = []
     
-    for degree in degrees:
+    for lambda_ in lambdas:
+        print(lambda_)
         temp_tr = []
         temp_te = []
         for k in range(k_fold):
-            loss_tr, loss_te = cross_validation(y, tx, k_indices, k, kind='ls', degree = degree)
+            loss_tr, loss_te = cross_validation(y, tx, k_indices, k, kind='ridge', degree = degree, lambda_ = lambda_)
             
             temp_tr.append(np.sqrt(2*loss_tr))
             temp_te.append(np.sqrt(2*loss_te))
@@ -154,6 +145,6 @@ def cross_validation_ridge(y, tx):
         losses_tr.append(np.mean(temp_tr))
         losses_te.append(np.mean(temp_te))
     
-    return pd.DataFrame(data = {'degree': degrees, 'losses_tr': losses_tr, 'losses_te': losses_te})
+    return pd.DataFrame(data = {'lambdas': lambdas, 'losses_tr': losses_tr, 'losses_te': losses_te})
     
     

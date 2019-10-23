@@ -77,17 +77,13 @@ def least_squares_SGD(y, tx, initial_w, batch_size, max_iters, gamma):
     return w, loss
 
 
-def run_GD(y, tx):
-    max_iters = 500
-    gamma = 0.000001
+def run_GD(y, tx, max_iters = 70, gamma=0.000001):
     
-    initial_w = np.array([0.0005 for i in range(tx.shape[1])])
+    initial_w = np.array([0 for i in range(tx.shape[1])])
     return least_squares_GD(y, tx, initial_w, max_iters, gamma)
 
-def run_SGD(y, tx):
+def run_SGD(y, tx, max_iters=70, gamma = 0.0000001):
     # Define the parameters of the algorithm.
-    max_iters = 70
-    gamma = 0.0000001
     batch_size = 1
 
     # Initialization
@@ -98,3 +94,14 @@ def run_SGD(y, tx):
 
     #print('Final loss: ', sgd_loss, '\nFinal weight vector:\n', sgd_w)
     return sgd_w, sgd_loss
+
+
+def ridge_regression(y, tx, lambda_):
+    """implement ridge regression."""
+    aI = 2 * tx.shape[0] * lambda_ * np.identity(tx.shape[1])
+    a = tx.T.dot(tx) + aI
+    b = tx.T.dot(y)
+    w_ridge = np.linalg.solve(a, b)
+    loss_ridge = (1/len(y))*np.transpose(y - tx@w_ridge).dot((y - tx@w_ridge))
+    return w_ridge, loss_ridge
+

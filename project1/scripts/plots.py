@@ -89,3 +89,11 @@ def plot_hist(x):
 
         ax[i].hist(x[:,i], bins = 100)
         ax[i].set_title(i)
+
+        
+def plot_cross_validation_ridge(losses):
+    
+    plt.semilogx(losses.lambdas, losses.losses_tr, marker='o')
+    plt.semilogx(losses.lambdas, losses.losses_te, marker='*')
+    
+    plt.show
