@@ -91,9 +91,35 @@ def plot_hist(x):
         ax[i].set_title(i)
 
         
-def plot_cross_validation_ridge(losses):
+def plot_cross_validation_lambda(losses):
     
+    fig = plt.figure(figsize=(8,6))
+
     plt.semilogx(losses.lambdas, losses.losses_tr, marker='o')
     plt.semilogx(losses.lambdas, losses.losses_te, marker='*')
-    
+    plt.title('Cross Validation Lambdas')
+    plt.xlabel('Lambdas')
+    plt.ylabel('Loss')
+    plt.grid()
     plt.show
+    plt.savefig('./plots/cross_validation_lambda.png')
+    
+    
+def plot_cross_validation_degree(losses):
+    
+    fig = plt.figure(figsize=(8,6))
+    
+    plt.plot(losses.degree, losses.losses_tr, marker ='o')
+    plt.plot(losses.degree, losses.losses_te, marker = '*')
+    plt.title('Cross Validation Degree')
+    plt.xlabel('Degree')
+    plt.ylabel('RMSE')
+    plt.xticks(np.arange(len(losses)))
+    plt.grid()
+    plt.ylim([0.74,0.83])
+    plt.show()
+    plt.savefig('./plots/cross_validation_degree_test.png')
+
+
+   
+    
