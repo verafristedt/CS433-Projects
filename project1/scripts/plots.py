@@ -77,3 +77,15 @@ def gradient_descent_visualization(
     ax2.plot(pred_x, pred_y, 'r')
 
     return fig
+
+
+def plot_hist(x):
+
+    fig, ax = plt.subplots(10, 3, figsize = (15,30))
+    fig.subplots_adjust(hspace = 0.5, wspace=0.2)
+
+    ax = ax.ravel()
+    for i in range(x.shape[1]):
+
+        ax[i].hist(x[:,i], bins = 30)
+        ax[i].set_title(i)

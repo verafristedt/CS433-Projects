@@ -98,6 +98,10 @@ def split_by_jets(y, x, jets_index=22):
 
     
 def remove_features(x, indicies):
+    """
+    Deletes all columns passed in indicies-parameter
+    """
+    
     return np.delete(x, indicies, axis = 1)
 
 def clean_data(x):
@@ -107,7 +111,6 @@ def clean_data(x):
     x = set_undefined_to_median(x)
     x = apply_log(x)
     x = apply_cosine_base(x)
-    #x = standardize(x)
     x = remove_features(x,[14, 15, 17, 18, 20])
     
     return x
