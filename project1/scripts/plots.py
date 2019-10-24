@@ -17,6 +17,15 @@ def plot_hist(x):
         ax[i].set_title(i)
 
         
+def plot_losses(losses):
+    
+    fig = plt.figure(figsize=(8,6))
+    plt.plot(losses.degree, losses.losses_tr)
+    plt.plot(loss.degree, losses.losses_te)
+    plt.show()
+
+
+        
 def plot_cross_validation_lambda(losses):
     
     fig = plt.figure(figsize=(8,6))
@@ -45,6 +54,24 @@ def plot_cross_validation_degree(losses):
     plt.ylim([0.74,0.83])
     plt.savefig('./plots/cross_validation_degree.png')
     plt.show()
+    
+    
+def plot_cross_validation_gamma(losses, model='gd'):
+    fig = plt.figure(figsize=(8,6))
+    
+    plt.semilogx(losses.gammas, losses.losses_tr, marker='o')
+    plt.semilogx(losses.gammas, losses.losses_te, marker='*')
+    if model == 'gd':
+        plt.title('Cross Validation - Gamma (GD)')
+    else:
+        plt.title('Cross Validation - Gamma (SGD)')
+    plt.xlabel('Gamma')
+    plt.ylabel('MSE')
+    plt.grid()
+    plt.savefig('./plots/cross_validation_gamma.png')
+    plt.show()
+
+
 
 
    

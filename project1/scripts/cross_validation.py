@@ -27,7 +27,7 @@ def build_k_indices(y, k_fold, seed):
 
 
 
-def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1):
+def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1, gamma_=0.001, max_iters=50):
     """
     General function that does cross validation for each of the methods.
     
@@ -60,9 +60,11 @@ def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1):
     
     
     if kind == 'gd':
-        w, _ = least_squares_GD(y_tr, tx_tr, initial_w, max_iters, gamma)
+        initial_w = np.zeros(tx_tr.shape[1])
+        w, _ = least_squares_GD(y_tr, tx_tr, initial_w, max_iters, gamma_)
     elif kind == 'sgd':
-        w, _ = least_squares_SGD(y_tr, tx_tr, initial_w, max_iters, gamma)
+        initial_w = np.zeros(tx_tr.shape[1])
+        w, _ = least_squares_SGD(y_tr, tx_tr, initial_w, 1, max_iters, gamma_)
     elif kind == 'ls':
         w, _ = least_squares(y_tr, tx_tr)
     elif kind == 'ridge':
@@ -78,15 +80,6 @@ def cross_validation(y, tx, k_indices, k, kind='gd', lambda_=0, degree=1):
     loss_te = compute_mse(y_te, tx_te, w)
     
     return loss_tr, loss_te
-
-
-def plot_losses(losses):
-    
-    fig = plt.figure(figsize=(8,6))
-    plt.plot(losses.degree, losses.losses_tr)
-    plt.plot(loss.degree, losses.losses_te)
-    plt.show()
-
 
     
 def cross_validation_least_squares(y, tx, max_degree):
@@ -149,3 +142,59 @@ def cross_validation_ridge(y, tx, degree):
     return pd.DataFrame(data = {'lambdas': lambdas, 'losses_tr': losses_tr, 'losses_te': losses_te})
     
     
+def cross_validation_GD(y, tx, max_iters, degree):
+    """
+        Function for testing which gamma we should use in our gradient descent
+    """
+    seed = 10
+    k_fold = 5
+    k_indices = build_k_indices(y, k_fold, seed)
+    
+    gammas = np.logspace(-4,-2,20)
+    
+    losses_tr = []
+    losses_te = []
+    
+    for gamma_ in gammas:
+        print('Currently at gamma:', gamma_)
+        temp_tr = []
+        temp_te = []
+        for k in range(k_fold):
+            loss_tr, loss_te = cross_validation(y, tx, k_indices, k, kind='gd', degree=degree, gamma_=gamma_, max_iters=max_iters)
+            
+            temp_tr.append(loss_tr)
+            temp_te.append(loss_te)
+        
+        losses_tr.append(np.mean(temp_tr))
+        losses_te.append(np.mean(temp_te))
+    
+    return pd.DataFrame(data = {'gammas': gammas, 'losses_tr': losses_tr, 'losses_te': losses_te})
+
+
+def cross_validation_SGD(y, tx, max_iters, degree):
+    """
+        Function for testing which gamma we should use in our gradient descent
+    """
+    seed = 10
+    k_fold = 5
+    k_indices = build_k_indices(y, k_fold, seed)
+    
+    gammas = np.logspace(-6,0,10)
+    
+    losses_tr = []
+    losses_te = []
+    
+    for gamma_ in gammas:
+        print('Currently at gamma:', gamma_)
+        temp_tr = []
+        temp_te = []
+        for k in range(k_fold):
+            loss_tr, loss_te = cross_validation(y, tx, k_indices, k, kind='sgd', degree=degree, gamma_=gamma_, max_iters=max_iters)
+            
+            temp_tr.append(loss_tr)
+            temp_te.append(loss_te)
+        
+        losses_tr.append(np.mean(temp_tr))
+        losses_te.append(np.mean(temp_te))
+    
+    return pd.DataFrame(data = {'gammas': gammas, 'losses_tr': losses_tr, 'losses_te': losses_te})

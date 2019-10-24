@@ -77,7 +77,7 @@ def least_squares_SGD(y, tx, initial_w, batch_size, max_iters, gamma):
     return w, loss
 
 
-def run_GD(y, tx, max_iters = 70, gamma=0.000001):
+def run_GD(y, tx, max_iters = 50, gamma=0.000001):
     
     initial_w = np.array([0 for i in range(tx.shape[1])])
     return least_squares_GD(y, tx, initial_w, max_iters, gamma)
