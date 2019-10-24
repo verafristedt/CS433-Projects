@@ -35,6 +35,7 @@ def plot_cross_validation_lambda(losses):
     plt.title('Cross Validation - Lambda')
     plt.xlabel('Lambda')
     plt.ylabel('RMSE')
+    plt.legend(['Training data', 'Testing data'])
     plt.grid()
     plt.savefig('./plots/cross_validation_lambda.png')
     plt.show
