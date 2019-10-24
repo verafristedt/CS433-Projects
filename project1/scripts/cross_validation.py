@@ -179,7 +179,7 @@ def cross_validation_SGD(y, tx, max_iters, degree):
     k_fold = 5
     k_indices = build_k_indices(y, k_fold, seed)
     
-    gammas = np.logspace(-6,0,10)
+    gammas = np.logspace(-5,-2,20)
     
     losses_tr = []
     losses_te = []

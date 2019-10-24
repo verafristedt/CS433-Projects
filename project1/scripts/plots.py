@@ -49,6 +49,7 @@ def plot_cross_validation_degree(losses):
     plt.title('Cross Validation - Degree')
     plt.xlabel('Degree')
     plt.ylabel('RMSE')
+    plt.legend(['Training data', 'Testing data'])
     plt.xticks(np.arange(len(losses)))
     plt.grid()
     plt.ylim([0.74,0.83])
@@ -56,19 +57,22 @@ def plot_cross_validation_degree(losses):
     plt.show()
     
     
-def plot_cross_validation_gamma(losses, model='gd'):
+def plot_cross_validation_gamma(losses, model='gd'):    
     fig = plt.figure(figsize=(8,6))
     
     plt.semilogx(losses.gammas, losses.losses_tr, marker='o')
     plt.semilogx(losses.gammas, losses.losses_te, marker='*')
     if model == 'gd':
         plt.title('Cross Validation - Gamma (GD)')
+        plt.ylim(0.37, 0.5)
     else:
         plt.title('Cross Validation - Gamma (SGD)')
+        plt.ylim(0.44, 0.7)
+    plt.legend(['Training data', 'Testing data'])
     plt.xlabel('Gamma')
     plt.ylabel('MSE')
     plt.grid()
-    plt.savefig('./plots/cross_validation_gamma.png')
+    plt.savefig('./plots/cross_validation_gamma_2.png')
     plt.show()
 
 
