@@ -27,7 +27,7 @@ _, tX_test, ids_test = load_csv_data(DATA_TEST_PATH)
 tX_test = clean_data(tX_test)
 tX_test = build_poly(tX_test, degree)
 
-OUTPUT_PATH = './predictions/least_squares_final.csv' # TODO: fill in desired name of output file for submission
+OUTPUT_PATH = './least_squares_final.csv' # TODO: fill in desired name of output file for submission
 y_pred = predict_labels(weights, tX_test)
 create_csv_submission(ids_test, y_pred, OUTPUT_PATH)
 
