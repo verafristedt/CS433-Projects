@@ -17,7 +17,7 @@ def plot_hist(x):
         ax[i].set_title(i)
 
         
-def plot_cross_validation_lambda(losses):
+def plot_cross_validation_lambda(losses, filename = 'cross_validation_lambda.png' ):
     
     fig = plt.figure(figsize=(8,6))
 
@@ -27,11 +27,11 @@ def plot_cross_validation_lambda(losses):
     plt.xlabel('Lambda')
     plt.ylabel('RMSE')
     plt.grid()
-    plt.savefig('./plots/cross_validation_lambda.png')
+    plt.savefig('./plots/' + filename)
     plt.show
     
     
-def plot_cross_validation_degree(losses):
+def plot_cross_validation_degree(losses, filename = 'cross_validation_degree.png'):
     
     fig = plt.figure(figsize=(8,6))
     
@@ -42,8 +42,8 @@ def plot_cross_validation_degree(losses):
     plt.ylabel('RMSE')
     plt.xticks(np.arange(len(losses)))
     plt.grid()
-    plt.ylim([0.74,0.83])
-    plt.savefig('./plots/cross_validation_degree.png')
+    plt.ylim([0.74,1])
+    plt.savefig('./plots/' + filename)
     plt.show()
 
 

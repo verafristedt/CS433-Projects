@@ -101,3 +101,8 @@ def split_data(y, x, ratio, seed=1):
     x_te = x[ind_te]
     return y_tr, x_tr, y_te, x_te
 
+
+def local_model_test(y, x, w):
+    y_pred = predict_labels(w, x)
+    num_equal = y_pred[y_pred == y].shape[0]
+    print('Local accuracy:', num_equal*100/y_pred.shape[0],'%.')

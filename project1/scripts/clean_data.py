@@ -35,7 +35,7 @@ def set_undefined_to_median(x):
     """ 
     Sets all values equal to -999 to the median of column.
     """
-    x[x == -999] = np.nan
+    #x[x == -999] = np.nan
     x_median = np.nanmedian(x, axis = 0)
     indicies = np.where(np.isnan(x))
     x[indicies] = np.take(x_median, indicies[1])
@@ -47,9 +47,9 @@ def apply_log(x):
     Takes the natrual logarithm of all columns that have nonnegative elements
     """
     neg_col= np.unique((np.where(x < 0 )[1]))
-    neg_col = np.append(neg_col, 22)  # Add column containing jets
+    neg_col = np.append(neg_col, 16)  # Add column containing jets
     
-    pos_col = np.setdiff1d(np.arange(30), neg_col)
+    pos_col = np.setdiff1d(np.arange(x.shape[1]), neg_col)
     x[:, pos_col] = np.log(1 + x[:,pos_col])
     
     return x
@@ -93,6 +93,10 @@ def split_by_jets(y, x, jets_index=22):
     y1 = y[np.argwhere(x[:,jets_index] == 1)]
     y23 = y[np.argwhere((x[:,jets_index] == 2) | (x[:,jets_index] == 3) )]
 
+    y0 = y0.reshape(len(y0))
+    y1 = y1.reshape(len(y1))
+    y23 = y23.reshape(len(y23))
+    
     return jet0, jet1, jet23, y0, y1, y23
     
 
@@ -116,3 +120,29 @@ def clean_data(x):
     return x
 
 
+
+def fill_missing_values(x):
+    x_median = np.nanmedian(x, axis = 1)
+    x_std = np.nanstd(x, axis = 1)
+    ind_nan = np.where(np.isnan(x))
+    for i in range(x.shape[1]):
+        col = x[:, i]
+        x_median = np.nanmedian(col)
+        x_std = np.nanstd(col)
+        ind = col[np.isnan(col)]
+        rand_value = np.random.normal(x_median, x_std, ind.shape[0])
+        col[np.isnan(col)] = rand_value
+        x[:,i] = col
+    return x
+
+
+
+def clean_data_test(x):
+    x[x==-999] = np.nan
+    x = fill_missing_values(x)
+
+    del_features = [7, 8, 11, 12,15,16,18, 20,22, 24, 25,26,28]
+    x = remove_features(x, del_features)
+    x = apply_log(x)
+    
+    return x

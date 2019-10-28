@@ -128,7 +128,7 @@ def cross_validation_ridge(y, tx, degree):
     k_fold = 5    
     k_indices = build_k_indices(y, k_fold, seed)
     
-    lambdas = np.logspace(-3,1,10)
+    lambdas = np.logspace(-3,3,7)
     
     losses_tr = []
     losses_te = []
