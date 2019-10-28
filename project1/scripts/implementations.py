@@ -45,19 +45,12 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     for n_iter in range(max_iters):
         
         gradient = compute_gradient(y, tx, w)
-        w =  w - gamma*gradient
+        w =  w - gamma * gradient
         
     
     loss = compute_mse(y,tx,w)  
     return w, loss
 
-
-def compute_stoch_gradient(y, tx, w):
-    """Compute a stochastic gradient from just few examples n and their corresponding y_n labels."""
-    e = y - tx.dot(w)
-    grad = tx.T.dot(e) / (-len(e))
-    
-    return grad
 
 
 def least_squares_SGD(y, tx, initial_w, batch_size, max_iters, gamma):
@@ -67,7 +60,7 @@ def least_squares_SGD(y, tx, initial_w, batch_size, max_iters, gamma):
     
     for n_iter,(y_, tx_) in enumerate(batch_iter(y, tx, batch_size, num_batches=max_iters, shuffle=True)):
         
-        stoch_gradient = compute_stoch_gradient(y_, tx_, w)
+        stoch_gradient = compute_gradient(y_, tx_, w)
         loss = compute_mse(y_, tx_, w)
         w = w - gamma * stoch_gradient
         
@@ -77,31 +70,39 @@ def least_squares_SGD(y, tx, initial_w, batch_size, max_iters, gamma):
     return w, loss
 
 
-def run_GD(y, tx, max_iters = 50, gamma=0.000001):
-    
-    initial_w = np.array([0 for i in range(tx.shape[1])])
-    return least_squares_GD(y, tx, initial_w, max_iters, gamma)
-
-def run_SGD(y, tx, max_iters=70, gamma = 0.0000001):
-    # Define the parameters of the algorithm.
-    batch_size = 1
-
-    # Initialization
-    w_initial = np.zeros(tx.shape[1])
-
-    # Start SGD.
-    sgd_w, sgd_loss = least_squares_SGD(y, tx, w_initial, batch_size, max_iters, gamma)
-
-    #print('Final loss: ', sgd_loss, '\nFinal weight vector:\n', sgd_w)
-    return sgd_w, sgd_loss
-
-
 def ridge_regression(y, tx, lambda_):
     """implement ridge regression."""
     aI = 2 * tx.shape[0] * lambda_ * np.identity(tx.shape[1])
     a = tx.T.dot(tx) + aI
     b = tx.T.dot(y)
-    w_ridge = np.linalg.solve(a, b)
-    loss_ridge = compute_mse(y, tx, w_ridge)
-    return w_ridge, loss_ridge
+    w = np.linalg.solve(a, b)
+    loss = compute_mse(y, tx, w_ridge)
+    return w, loss
 
+
+def logistic_regression(y, tx, initial_w, max_iters, gamma=0.000001):
+    """Logistic regression algorithm"""
+    w = initial_w
+    
+    for n_iter in range(max_iters):
+        # Compute loss and gradient
+        loss = compute_logistic_loss(y, tx, w)
+        log_grad = compute_logistic_gradient(y, tx, w)
+        # Calculate new w
+        w = w - gamma * log_grad
+        
+    return w, loss
+
+
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma=0.000001):
+    """Regularized logistic regression algorithm"""
+    w = initial_w
+    
+    for n_iter in range(max_iters):
+        # Compute loss and gradient while adding the regularization term
+        loss = compute_logistic_loss(y, tx, w) + lambda_ * np.linalg.norm(w)
+        log_grad = compute_logistic_gradient(y, tx, w) + lambda_ * w
+        # Calculate new w
+        w = w - gamma * log_grad
+
+    return w, loss
