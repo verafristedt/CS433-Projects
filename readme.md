@@ -1,6 +1,7 @@
 # Machine Learning Projects
 
 **Project 1:** Finding the Higgs Boson in a dataset from CERN. Project report can be read [here](Report_Project1.pdf).
+
 **Project 2:** Detecting roads in aerial images using CNNs. Project report can be read [here](Report_Project2.pdf).
 
 
